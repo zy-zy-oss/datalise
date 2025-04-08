@@ -55,8 +55,8 @@ const rules = {
 const handleLogin = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
-      // 这里模拟登录成功
-      localStorage.setItem('isAuthenticated', 'true')
+      // 模拟登录成功
+      localStorage.setItem('token', 'mock-token')
       ElMessage.success('登录成功')
       router.push('/dashboard')
     }
