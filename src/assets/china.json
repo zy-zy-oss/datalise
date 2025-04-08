@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "北京"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [116.405285, 39.904989]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "上海"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [121.472644, 31.231706]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "广东"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [113.280637, 23.125178]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "浙江"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [120.153576, 30.287459]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "江苏"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [118.767413, 32.041544]
+      }
+    }
+  ]
+} 
