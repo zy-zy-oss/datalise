@@ -3,6 +3,7 @@ import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
 import Analysis from '../views/Analysis.vue'
 import Dashboard from '../views/Dashboard.vue'
+import Pricing from '@/views/Pricing.vue'
 
 const routes = [
   {
@@ -28,6 +29,10 @@ const routes = [
     path: '/analysis',
     name: 'Analysis',
     component: Analysis
+  },  {
+    path: '/pricing',
+    name: 'Pricing',
+    component: Pricing
   }
 ]
 

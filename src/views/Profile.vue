@@ -1,217 +1,587 @@
 <template>
   <div class="profile-container">
-
-
-    <el-row :gutter="20" class="mt-20">
-      <!-- 年龄分布 -->
-      <el-col :span="8">
+    <!-- 图表部分 -->
+    <el-row :gutter="20">
+      <!-- 客户类型柱状图 -->
+      <el-col :span="12">
         <el-card class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>年龄分布</span>
+              <span>客户类型分布</span>
             </div>
           </template>
-          <div ref="ageChart" class="chart"></div>
+          <div ref="customerTypeChart" class="chart"></div>
         </el-card>
       </el-col>
-      <!-- 性别分布 -->
-      <el-col :span="8">
+      <!-- 客户类型分类占比环形图 -->
+      <el-col :span="12">
         <el-card class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>性别分布</span>
+              <span>客户类型占比</span>
             </div>
           </template>
-          <div ref="genderChart" class="chart"></div>
-        </el-card>
-      </el-col>
-      <!-- 取消率预测 -->
-      <el-col :span="8">
-        <el-card class="chart-card">
-          <template #header>
-            <div class="card-header">
-              <span>取消频率</span>
-            </div>
-          </template>
-          <div ref="cancelChart" class="chart"></div>
+          <div ref="customerTypeRatioChart" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
 
     <el-row :gutter="20" class="mt-20">
-      <!-- 地域分布 -->
-      <el-col :span="12">
+      <!-- 客户类型与市场来源堆积柱状图 -->
+      <el-col :span="24">
         <el-card class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>地域分布</span>
+              <span>客户类型与市场来源分析</span>
             </div>
           </template>
-          <div ref="mapChart" class="chart"></div>
-        </el-card>
-      </el-col>
-      <!-- 预订习惯 -->
-      <el-col :span="12">
-        <el-card class="chart-card">
-          <template #header>
-            <div class="card-header">
-              <span>预订习惯</span>
-            </div>
-          </template>
-          <div ref="bookingChart" class="chart"></div>
+          <div ref="marketSourceChart" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
 
     <el-row :gutter="20" class="mt-20">
-      <!-- 消费水平 -->
-      <el-col :span="12">
+      <!-- 客户类型与各种需求的柱形图 -->
+      <el-col :span="24">
         <el-card class="chart-card">
           <template #header>
             <div class="card-header">
-              <span>消费水平</span>
+              <span>客户需求分析</span>
             </div>
           </template>
-          <div ref="consumptionChart" class="chart"></div>
-        </el-card>
-      </el-col>
-      <!-- 提前取消率 -->
-      <el-col :span="12">
-        <el-card class="chart-card">
-          <template #header>
-            <div class="card-header">
-              <span>提前取消率</span>
-            </div>
-          </template>
-          <div ref="earlyCancelChart" class="chart"></div>
+          <div ref="customerNeedsChart" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-card class="marketing-tools">
+    <el-row :gutter="20" class="mt-20">
+      <!-- 客户类型与入住时间段折线图 -->
+      <el-col :span="24">
+        <el-card class="chart-card">
+          <template #header>
+            <div class="card-header">
+              <span>入住时间段分析</span>
+            </div>
+          </template>
+          <div ref="checkInTimeChart" class="chart"></div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 客户信息表格 -->
+    <el-card class="mt-20">
       <template #header>
         <div class="card-header">
-          <span>营销工具</span>
+          <span>客户信息列表</span>
         </div>
       </template>
-      <el-row :gutter="20">
-        <el-col :span="8" v-for="(tool, index) in marketingTools" :key="index">
-          <el-card class="tool-card" shadow="hover">
-            <template #header>
-              <div class="tool-header">
-                <el-icon><component :is="tool.icon" /></el-icon>
-                <span>{{ tool.name }}</span>
-              </div>
-            </template>
-            <div class="tool-content">
-              <div class="tool-description">{{ tool.description }}</div>
-              <div class="tool-metrics">
-                <div class="metric">
-                  <span class="label">转化率</span>
-                  <span class="value">{{ tool.conversionRate }}%</span>
-                </div>
-                <div class="metric">
-                  <span class="label">ROI</span>
-                  <span class="value">{{ tool.roi }}</span>
-                </div>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+      <el-table :data="customerList" style="width: 100%">
+        <el-table-column prop="userId" label="用户ID" width="100" />
+        <el-table-column prop="adultCount" label="成人数量" width="100" />
+        <el-table-column prop="childCount" label="儿童数量" width="100" />
+        <el-table-column prop="nightsNotStayed" label="未住宿晚" width="100" />
+        <el-table-column prop="mealPlan" label="饮食套餐" width="150" />
+        <el-table-column prop="needsParking" label="是否需要停车" width="150" />
+        <el-table-column prop="roomType" label="预定的房型" width="150" />
+        <el-table-column prop="bookingTime" label="预定时间" width="150" />
+        <el-table-column prop="checkInYear" label="入住年份" width="100" />
+        <el-table-column prop="checkInMonth" label="入住月份" width="100" />
+        <el-table-column prop="checkInDate" label="入住日期" width="100" />
+        <el-table-column prop="venueCategory" label="场细分类" width="150" />
+        <el-table-column prop="isReturningCustomer" label="是否为回头客" width="150" />
+        <el-table-column prop="canceledBooking" label="取消的预定" width="150" />
+        <el-table-column prop="specialNeedsCount" label="特殊需求数" width="150" />
+        <el-table-column prop="orderStatus" label="订单状态" width="150" />
+        <el-table-column prop="customerType" label="客户类型" width="120" />
+        <el-table-column label="操作" width="200">
+          <template #default="scope">
+            <el-button type="primary" size="small" @click="handleRetention(scope.row)">
+              促留
+            </el-button>
+            <el-button type="danger" size="small" @click="handleDelete(scope.row)">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
+
+    <!-- 促留弹窗 -->
+    <el-dialog
+      v-model="retentionDialogVisible"
+      title="客户促留信息"
+      width="50%"
+    >
+      <el-descriptions :column="2" border>
+        <el-descriptions-item label="客户姓名">{{ selectedCustomer.name }}</el-descriptions-item>
+        <el-descriptions-item label="客户类型">{{ selectedCustomer.customerType }}</el-descriptions-item>
+        <el-descriptions-item label="联系电话">{{ selectedCustomer.phone }}</el-descriptions-item>
+        <el-descriptions-item label="房型">{{ selectedCustomer.roomType }}</el-descriptions-item>
+        <el-descriptions-item label="房型价格">{{ selectedCustomer.roomPrice }}</el-descriptions-item>
+      </el-descriptions>
+      
+      <el-card class="mt-20">
+        <template #header>
+          <div class="card-header">
+            <span>建议挽留话术</span>
+          </div>
+        </template>
+        <div class="retention-script">
+          {{ selectedCustomer.retentionScript }}
+        </div>
+      </el-card>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import * as echarts from 'echarts'
-import 'echarts-liquidfill'
-import { Promotion, Connection, ChatDotRound } from '@element-plus/icons-vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
-const ageChart = ref(null)
-const genderChart = ref(null)
-const cancelChart = ref(null)
-const mapChart = ref(null)
-const bookingChart = ref(null)
-const consumptionChart = ref(null)
-const earlyCancelChart = ref(null)
+// 图表引用
+const customerTypeChart = ref(null)
+const customerTypeRatioChart = ref(null)
+const marketSourceChart = ref(null)
+const customerNeedsChart = ref(null)
+const checkInTimeChart = ref(null)
 
-const marketingTools = [
+// 弹窗控制
+const retentionDialogVisible = ref(false)
+const selectedCustomer = ref({})
+
+const customerList = ref([
   {
-    name: '精准推送',
-    icon: 'Promotion',
-    description: '基于用户画像的个性化内容推送',
-    conversionRate: 15.6,
-    roi: '1:4.2'
+    userId: '001',
+    adultCount: 2,
+    childCount: 1,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '豪华套房',
+    bookingTime: '2023-10-01 12:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 1,
+    venueCategory: '会议室',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要价值客户',
   },
   {
-    name: '社交营销',
-    icon: 'Connection',
-    description: '社交媒体平台营销活动',
-    conversionRate: 12.3,
-    roi: '1:3.8'
+    userId: '002',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 1,
+    mealPlan: '早餐',
+    needsParking: '否',
+    roomType: '标准间',
+    bookingTime: '2023-10-02 14:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 2,
+    venueCategory: '宴会厅',
+    isReturningCustomer: '否',
+    canceledBooking: '是',
+    specialNeedsCount: 1,
+    orderStatus: '已取消',
+    customerType: '潜在价值客户',
   },
   {
-    name: '客服互动',
-    icon: 'ChatDotRound',
-    description: '智能客服系统互动营销',
-    conversionRate: 18.9,
-    roi: '1:5.1'
+    userId: '003',
+    adultCount: 2,
+    childCount: 2,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '家庭房',
+    bookingTime: '2023-10-03 10:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 3,
+    venueCategory: '游泳池',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要挽留客户',
+  },
+  {
+    userId: '004',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 2,
+    mealPlan: '无餐',
+    needsParking: '否',
+    roomType: '单人间',
+    bookingTime: '2023-10-04 16:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 4,
+    venueCategory: '健身房',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '一般客户',
+  },
+  {
+    userId: '005',
+    adultCount: 2,
+    childCount: 1,
+    nightsNotStayed: 0,
+    mealPlan: '半餐',
+    needsParking: '是',
+    roomType: '豪华套房',
+    bookingTime: '2023-10-05 12:30',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 5,
+    venueCategory: '会议室',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 1,
+    orderStatus: '已入住',
+    customerType: '重要价值客户',
+  },
+  {
+    userId: '006',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 1,
+    mealPlan: '早餐',
+    needsParking: '否',
+    roomType: '标准间',
+    bookingTime: '2023-10-06 14:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 6,
+    venueCategory: '宴会厅',
+    isReturningCustomer: '否',
+    canceledBooking: '是',
+    specialNeedsCount: 0,
+    orderStatus: '已取消',
+    customerType: '潜在价值客户',
+  },
+  {
+    userId: '007',
+    adultCount: 2,
+    childCount: 2,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '家庭房',
+    bookingTime: '2023-10-07 10:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 7,
+    venueCategory: '游泳池',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要挽留客户',
+  },
+  {
+    userId: '008',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 2,
+    mealPlan: '无餐',
+    needsParking: '否',
+    roomType: '单人间',
+    bookingTime: '2023-10-08 16:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 8,
+    venueCategory: '健身房',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '一般客户',
+  },
+  {
+    userId: '009',
+    adultCount: 2,
+    childCount: 1,
+    nightsNotStayed: 0,
+    mealPlan: '半餐',
+    needsParking: '是',
+    roomType: '豪华套房',
+    bookingTime: '2023-10-09 12:30',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 9,
+    venueCategory: '会议室',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 1,
+    orderStatus: '已入住',
+    customerType: '重要价值客户',
+  },
+  {
+    userId: '010',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 1,
+    mealPlan: '早餐',
+    needsParking: '否',
+    roomType: '标准间',
+    bookingTime: '2023-10-10 14:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 10,
+    venueCategory: '宴会厅',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '潜在价值客户',
+  },
+  {
+    userId: '011',
+    adultCount: 2,
+    childCount: 2,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '家庭房',
+    bookingTime: '2023-10-11 10:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 11,
+    venueCategory: '游泳池',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要挽留客户',
+  },
+  {
+    userId: '012',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 2,
+    mealPlan: '无餐',
+    needsParking: '否',
+    roomType: '单人间',
+    bookingTime: '2023-10-12 16:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 12,
+    venueCategory: '健身房',
+    isReturningCustomer: '否',
+    canceledBooking: '是',
+    specialNeedsCount: 0,
+    orderStatus: '已取消',
+    customerType: '一般客户',
+  },
+  {
+    userId: '013',
+    adultCount: 2,
+    childCount: 1,
+    nightsNotStayed: 0,
+    mealPlan: '半餐',
+    needsParking: '是',
+    roomType: '豪华套房',
+    bookingTime: '2023-10-13 12:30',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 13,
+    venueCategory: '会议室',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 1,
+    orderStatus: '已入住',
+    customerType: '重要价值客户',
+  },
+  {
+    userId: '014',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 1,
+    mealPlan: '早餐',
+    needsParking: '否',
+    roomType: '标准间',
+    bookingTime: '2023-10-14 14:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 14,
+    venueCategory: '宴会厅',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '潜在价值客户',
+  },
+  {
+    userId: '015',
+    adultCount: 2,
+    childCount: 2,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '家庭房',
+    bookingTime: '2023-10-15 10:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 15,
+    venueCategory: '游泳池',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要挽留客户',
+  },
+  {
+    userId: '016',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 2,
+    mealPlan: '无餐',
+    needsParking: '否',
+    roomType: '单人间',
+    bookingTime: '2023-10-16 16:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 16,
+    venueCategory: '健身房',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '一般客户',
+  },
+  {
+    userId: '017',
+    adultCount: 2,
+    childCount: 1,
+    nightsNotStayed: 0,
+    mealPlan: '半餐',
+    needsParking: '是',
+    roomType: '豪华套房',
+    bookingTime: '2023-10-17 12:30',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 17,
+    venueCategory: '会议室',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 1,
+    orderStatus: '已入住',
+    customerType: '重要价值客户',
+  },
+  {
+    userId: '018',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 1,
+    mealPlan: '早餐',
+    needsParking: '否',
+    roomType: '标准间',
+    bookingTime: '2023-10-18 14:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 18,
+    venueCategory: '宴会厅',
+    isReturningCustomer: '否',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '潜在价值客户',
+  },
+  {
+    userId: '019',
+    adultCount: 2,
+    childCount: 2,
+    nightsNotStayed: 0,
+    mealPlan: '全餐',
+    needsParking: '是',
+    roomType: '家庭房',
+    bookingTime: '2023-10-19 10:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 19,
+    venueCategory: '游泳池',
+    isReturningCustomer: '是',
+    canceledBooking: '否',
+    specialNeedsCount: 0,
+    orderStatus: '已入住',
+    customerType: '重要挽留客户',
+  },
+  {
+    userId: '020',
+    adultCount: 1,
+    childCount: 0,
+    nightsNotStayed: 2,
+    mealPlan: '无餐',
+    needsParking: '否',
+    roomType: '单人间',
+    bookingTime: '2023-10-20 16:00',
+    checkInYear: 2023,
+    checkInMonth: 10,
+    checkInDate: 20,
+    venueCategory: '健身房',
+    isReturningCustomer: '否',
+    canceledBooking: '是',
+    specialNeedsCount: 0,
+    orderStatus: '已取消',
+    customerType: '一般客户',
   }
-]
+]);
 
-// 中国地图数据
-const chinaData = [
-  { name: '北京', value: 2000 },
-  { name: '上海', value: 1800 },
-  { name: '广东', value: 1500 },
-  { name: '浙江', value: 1200 },
-  { name: '江苏', value: 1000 }
-]
-
-// 性别分布数据
-const genderData = [
-  { value: 0.6, name: '男性' },
-  { value: 0.4, name: '女性' }
-]
-
-// 预测表单数据
-const predictionForm = ref({
-  dateRange: [],
-  ageRange: [18, 80],
-  gender: 'all',
-  channel: 'all',
-  priceRange: [0, 5000],
-  region: 'all'
-})
-
-// 预测结果
-const showPredictionResult = ref(false)
-const predictionResult = ref({
-  rate: 0,
-  reason: ''
-})
-
-// 生成预测
-const predictCancellation = () => {
-  // 模拟预测结果
-  predictionResult.value = {
-    rate: Math.random() * 30 + 10, // 10-40% 的随机取消率
-    reason: `根据所选条件分析：
-1. 该时间段内预订量较稳定
-2. 目标客户群体消费能力较强
-3. 选择渠道的客户忠诚度较高
-4. 该地区客户取消率普遍较低
-综合以上因素，预测取消率较低。`
-  }
-  showPredictionResult.value = true
+// 处理促留按钮点击
+const handleRetention = (row) => {
+  selectedCustomer.value = row
+  retentionDialogVisible.value = true
 }
 
+// 处理删除按钮点击
+const handleDelete = (row) => {
+  ElMessageBox.confirm(
+    '确定要删除该客户信息吗？',
+    '警告',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    // 这里实现删除逻辑
+    ElMessage.success('删除成功')
+  })
+}
+
+// 初始化图表
 onMounted(() => {
-  // 年龄分布饼图
-  const ageChartInstance = echarts.init(ageChart.value)
-  ageChartInstance.setOption({
+  // 客户类型柱状图
+  const typeChart = echarts.init(customerTypeChart.value)
+  typeChart.setOption({
+    tooltip: {
+      trigger: 'axis'
+    },
+    xAxis: {
+      type: 'category',
+      data: ['一般客户', '潜在价值客户', '重要挽留客户', '重要价值客户']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      data: [120, 200, 150, 80],
+      type: 'bar',
+      itemStyle: {
+        color: '#409EFF'
+      }
+    }]
+  })
+
+  // 客户类型占比环形图
+  const ratioChart = echarts.init(customerTypeRatioChart.value)
+  ratioChart.setOption({
     tooltip: {
       trigger: 'item'
     },
@@ -221,196 +591,19 @@ onMounted(() => {
     },
     series: [{
       type: 'pie',
-      radius: '50%',
+      radius: ['40%', '70%'],
       data: [
-        { value: 1048, name: '18-25岁' },
-        { value: 735, name: '26-35岁' },
-        { value: 580, name: '36-45岁' },
-        { value: 484, name: '46-55岁' },
-        { value: 300, name: '56岁以上' }
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }]
-  })
-
-  // 性别分布液体图
-  const genderChartInstance = echarts.init(genderChart.value)
-  const genderOption = {
-    title: {
-      text: '性别分布',
-      left: 'center',
-      top: 20
-    },
-    series: [{
-      type: 'liquidFill',
-      data: [0.6, 0.4],
-      radius: '80%',
-      center: ['50%', '50%'],
-      label: {
-        formatter: function(param) {
-          return '男性\n60%'
-        },
-        fontSize: 20,
-        color: '#333',
-        position: ['50%', '50%']
-      },
-      outline: {
-        show: false
-      },
-      backgroundStyle: {
-        color: '#fff'
-      },
-      itemStyle: {
-        color: '#409EFF'
-      },
-      emphasis: {
-        itemStyle: {
-          opacity: 0.8
-        }
-      }
-    }]
-  }
-  genderChartInstance.setOption(genderOption)
-
-  // 取消频率环形图
-  const cancelChartInstance = echarts.init(cancelChart.value)
-  cancelChartInstance.setOption({
-    title: {
-      text: '总客户数\n10,000',
-      left: 'center',
-      top: 'center',
-      textStyle: {
-        fontSize: 14
-      }
-    },
-    tooltip: {
-      trigger: 'item'
-    },
-    series: [{
-      type: 'pie',
-      radius: ['50%', '70%'],
-      avoidLabelOverlap: false,
-      label: {
-        show: false
-      },
-      emphasis: {
-        label: {
-          show: true,
-          fontSize: '20',
-          fontWeight: 'bold'
-        }
-      },
-      labelLine: {
-        show: false
-      },
-      data: [
-        { value: 3000, name: '经常取消' },
-        { value: 4000, name: '偶尔取消' },
-        { value: 3000, name: '从不取消' }
+        { value: 120, name: '一般客户' },
+        { value: 200, name: '潜在价值客户' },
+        { value: 150, name: '重要挽留客户' },
+        { value: 80, name: '重要价值客户' }
       ]
     }]
   })
 
-  // 地域分布地图
-  const mapChartInstance = echarts.init(mapChart.value)
-  const option = {
-    title: {
-      text: '中国客户分布',
-      left: 'center'
-    },
-    tooltip: {
-      trigger: 'item',
-      formatter: '{b}: {c} 人'
-    },
-    visualMap: {
-      min: 0,
-      max: 2000,
-      left: 'right',
-      top: 'bottom',
-      text: ['高', '低'],
-      calculable: true,
-      inRange: {
-        color: ['#e0f3f8', '#4575b4']
-      }
-    },
-    toolbox: {
-      show: true,
-      left: 'left',
-      top: 'top',
-      feature: {
-        dataView: { readOnly: false },
-        restore: {},
-        saveAsImage: {}
-      }
-    },
-    series: [
-      {
-        name: '客户数量',
-        type: 'map',
-        map: 'china',
-        roam: true,
-        emphasis: {
-          label: {
-            show: true
-          }
-        },
-        data: chinaData
-      }
-    ]
-  }
-
-  // 加载中国地图数据
-  fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
-    .then(response => response.json())
-    .then(data => {
-      echarts.registerMap('china', data)
-      mapChartInstance.setOption(option)
-    })
-    .catch(error => {
-      console.error('加载地图数据失败:', error)
-    })
-
-  // 预定习惯柱状图
-  const bookingChartInstance = echarts.init(bookingChart.value)
-  bookingChartInstance.setOption({
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: ['提前1天', '提前3天', '提前1周', '提前2周', '提前1月']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [120, 200, 150, 80, 70],
-      type: 'bar',
-      showBackground: true,
-      backgroundStyle: {
-        color: 'rgba(180, 180, 180, 0.2)'
-      }
-    }]
-  })
-
-  // 消费行为柱状图
-  const consumptionChartInstance = echarts.init(consumptionChart.value)
-  consumptionChartInstance.setOption({
+  // 客户类型与市场来源堆积柱状图
+  const marketChart = echarts.init(marketSourceChart.value)
+  marketChart.setOption({
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -418,73 +611,133 @@ onMounted(() => {
       }
     },
     legend: {
-      data: ['低消费', '中消费', '高消费']
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      data: ['OTA', '直销', '旅行社', '企业合作']
     },
     xAxis: {
       type: 'category',
-      data: ['标准房', '豪华房', '套房', '别墅']
+      data: ['一般客户', '潜在价值客户', '重要挽留客户', '重要价值客户']
     },
     yAxis: {
       type: 'value'
     },
     series: [
       {
-        name: '低消费',
+        name: 'OTA',
         type: 'bar',
         stack: 'total',
         data: [320, 302, 301, 334]
       },
       {
-        name: '中消费',
+        name: '直销',
         type: 'bar',
         stack: 'total',
         data: [120, 132, 101, 134]
       },
       {
-        name: '高消费',
+        name: '旅行社',
         type: 'bar',
         stack: 'total',
         data: [220, 182, 191, 234]
+      },
+      {
+        name: '企业合作',
+        type: 'bar',
+        stack: 'total',
+        data: [150, 212, 201, 154]
       }
     ]
   })
 
-  // 提前取消占比柱状图
-  const earlyCancelChartInstance = echarts.init(earlyCancelChart.value)
-  earlyCancelChartInstance.setOption({
+  // 客户需求分析柱形图
+  const needsChart = echarts.init(customerNeedsChart.value)
+  needsChart.setOption({
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
       }
     },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+    legend: {
+      data: ['一般客户', '潜在价值客户', '重要挽留客户', '重要价值客户']
     },
     xAxis: {
       type: 'category',
-      data: ['1小时内', '1-3小时', '3-6小时', '6-12小时', '12-24小时', '24小时以上']
+      data: ['房型需求', '餐饮需求', '年龄段', '特殊需求', '停车需求']
     },
     yAxis: {
-      type: 'value',
-      name: '取消率(%)'
+      type: 'value'
     },
-    series: [{
-      data: [5, 8, 12, 15, 20, 25],
-      type: 'bar',
-      itemStyle: {
-        color: '#F56C6C'
+    series: [
+      {
+        name: '一般客户',
+        type: 'bar',
+        data: [320, 302, 301, 334, 390]
+      },
+      {
+        name: '潜在价值客户',
+        type: 'bar',
+        data: [120, 132, 101, 134, 90]
+      },
+      {
+        name: '重要挽留客户',
+        type: 'bar',
+        data: [220, 182, 191, 234, 290]
+      },
+      {
+        name: '重要价值客户',
+        type: 'bar',
+        data: [150, 212, 201, 154, 190]
       }
-    }]
+    ]
+  })
+
+  // 入住时间段折线图
+  const timeChart = echarts.init(checkInTimeChart.value)
+  timeChart.setOption({
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['一般客户', '潜在价值客户', '重要挽留客户', '重要价值客户']
+    },
+    xAxis: {
+      type: 'category',
+      data: ['6:00', '8:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name: '一般客户',
+        type: 'line',
+        data: [120, 132, 101, 134, 90, 230, 210, 120, 80]
+      },
+      {
+        name: '潜在价值客户',
+        type: 'line',
+        data: [220, 182, 191, 234, 290, 330, 310, 150, 130]
+      },
+      {
+        name: '重要挽留客户',
+        type: 'line',
+        data: [150, 232, 201, 154, 190, 330, 410, 200, 150]
+      },
+      {
+        name: '重要价值客户',
+        type: 'line',
+        data: [320, 332, 301, 334, 390, 330, 320, 280, 200]
+      }
+    ]
+  })
+
+  // 监听窗口大小变化，调整图表大小
+  window.addEventListener('resize', () => {
+    typeChart.resize()
+    ratioChart.resize()
+    marketChart.resize()
+    needsChart.resize()
+    timeChart.resize()
   })
 })
 </script>
@@ -492,57 +745,19 @@ onMounted(() => {
 <style scoped>
 .profile-container {
   padding: 20px;
-  min-height: calc(100vh - 60px);
 }
 
 .chart-card {
-  height: 400px;
   margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
 }
 
 .chart {
-  flex: 1;
+  height: 400px;
   width: 100%;
 }
 
 .mt-20 {
   margin-top: 20px;
-}
-
-:deep(.el-card__body) {
-  height: 100%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-:deep(.el-card__header) {
-  padding: 15px 20px;
-  border-bottom: 1px solid #EBEEF5;
-}
-
-:deep(.el-menu) {
-  border-right: none;
-}
-
-:deep(.el-menu-item) {
-  height: 50px;
-  line-height: 50px;
-}
-
-:deep(.el-menu-item.is-active) {
-  background-color: #ecf5ff;
-  color: #409EFF;
-}
-
-:deep(.el-menu-item:hover) {
-  background-color: #f5f7fa;
-}
-
-:deep(.el-menu-item .el-icon) {
-  margin-right: 8px;
 }
 
 .card-header {
@@ -551,92 +766,9 @@ onMounted(() => {
   align-items: center;
 }
 
-.marketing-tools {
-  margin-top: 20px;
-}
-
-.tool-card {
-  margin-bottom: 20px;
-}
-
-.tool-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tool-content {
-  padding: 10px 0;
-}
-
-.tool-description {
-  margin-bottom: 15px;
-  color: #666;
-}
-
-.tool-metrics {
-  display: flex;
-  justify-content: space-between;
-}
-
-.metric {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.metric .label {
-  font-size: 12px;
-  color: #666;
-}
-
-.metric .value {
-  font-size: 18px;
-  font-weight: bold;
-  color: #409EFF;
-}
-
-.prediction-form {
-  margin-bottom: 20px;
-}
-
-.prediction-result {
-  margin-bottom: 20px;
-}
-
-.result-content {
-  padding: 20px;
-}
-
-.result-value {
-  margin-bottom: 20px;
-  font-size: 18px;
-}
-
-.result-value .label {
+.retention-script {
+  line-height: 1.8;
   color: #606266;
-}
-
-.result-value .value {
-  color: #409EFF;
-  font-weight: bold;
-  font-size: 24px;
-  margin-left: 10px;
-}
-
-.result-reason {
-  color: #606266;
-  line-height: 1.6;
-}
-
-.result-reason .label {
-  font-weight: bold;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.result-reason p {
-  margin: 0;
   white-space: pre-line;
 }
 
@@ -646,7 +778,11 @@ onMounted(() => {
   font-weight: bold;
 }
 
-:deep(.el-form-item__label) {
-  font-weight: 500;
+:deep(.el-descriptions) {
+  margin-bottom: 20px;
+}
+
+:deep(.el-table) {
+  margin-top: 20px;
 }
 </style> 
